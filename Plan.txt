@@ -1,0 +1,74 @@
+﻿Classes and Modules
+
+1. Modules
+		User Module: Handles user registration and login.
+		Product Module: Manages product details like Product ID, Name, Price, and Quantity.
+		Cart Module: Handles adding and managing products in the user's cart.
+		Order Module: Processes orders and calculates total cost.
+________________________________________
+
+2. Classes
+
+User Management
+1.	User
+		Properties:
+			string Name
+			string Username
+			string Password
+			string MobileNumber
+		Methods:
+			bool Register(User user)
+			bool Login(string username, string password)
+Product Management
+2.	Product
+		Properties:
+			int ProductID
+			string ProductName
+			decimal Price
+			int Quantity
+		Methods:
+			List<Product> GetProducts()
+			bool UpdateProductQuantity(int productId, int quantity)
+Cart Management
+3.	Cart
+		int CartID
+		Properties:
+			string Username
+			List<CartItem> Items (uses CartItem class)
+		Methods:
+			bool AddToCart(int productId, int quantity)
+			decimal GetTotalCost()
+4.	CartItem
+		Properties:
+			int ProductID
+			string ProductName
+			decimal Price
+			int Quantity
+			decimal FinalPrice
+Order Management
+5.	Order
+		Properties:
+			int OrderID
+			int CartID
+			string Username
+			decimal TotalCost
+		Methods:
+			bool PlaceOrder(int cartId)
+
+________________________________________
+
+Flow of the Application
+
+1.	Registration/Login:
+o	Users register or log in through the User class.
+o	Validate username and password against the Registration table.
+2.	Product Browsing:
+o	Fetch product details from the Product table using the Product class.
+3.	Cart Operations:
+o	Add products to the cart using the Cart class.
+o	Update quantities and calculate the total cost in real-time.
+4.	Order Placement:
+o	Confirm the cart details.
+o	Create an order entry in the Order table and clear the cart.
+
+________________________________________
