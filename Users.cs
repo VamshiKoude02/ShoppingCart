@@ -18,7 +18,7 @@ namespace ShoppingCart
         public string Mobilenumber { get; set; }
     }
 
-    class Users
+     class Users
     {
         private SqlConnection con;
         public Users(SqlConnection conn)
@@ -28,13 +28,13 @@ namespace ShoppingCart
 
         Userdetails user = new Userdetails();
 
-        public bool UserLogin()
+        public void UserLogin()
         {
             Console.WriteLine("Enter Username:");
             user.Username = Console.ReadLine();
             Console.WriteLine("Enter Password");
             user.Password = Console.ReadLine();
-            SqlCommand cmd = new SqlCommand("[dbo.UserLogin]",con);
+            SqlCommand cmd = new SqlCommand("[dbo].[UserLogin]",con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@username", user.Username);
             cmd.Parameters.AddWithValue("@password",user.Password);
@@ -42,39 +42,48 @@ namespace ShoppingCart
             int result = (int)cmd.ExecuteScalar();
             if (result == 1)
             {
-                return true;
+                Console.WriteLine("User login success..");
             }
-            else return false;
+            else Console.WriteLine("Invalid Credentials..!");
         }
 
-        public bool UserRegister()
+        public void UserRegister()
         {
-            Userregistration:
             Console.WriteLine("Enter Name:");
             user.Name = Console.ReadLine();
             Console.WriteLine("Enter Username:");
             user.Username = Console.ReadLine();
             Console.WriteLine("Enter Password");
             user.Password = Console.ReadLine();
+            ValidPassword:
             Console.WriteLine("Enter Confrim Password");
             user.ConfrimPassword = Console.ReadLine();
             if(user.ConfrimPassword != user.Password)
             {
-                goto Userregistration;
+                Console.WriteLine("Password didn't match..!");
+                goto ValidPassword;
             }
+            CorrectNumber:
             Console.WriteLine("Enter Mobile Number");
             user.Mobilenumber = Console.ReadLine();
-            SqlCommand cmd = new SqlCommand("[dbo.UserRegister]", con);
+            if( user.Mobilenumber.Length!=10)
+            {
+                Console.WriteLine("Enter correct Mobile Number");
+                goto CorrectNumber;
+            }
+            SqlCommand cmd = new SqlCommand("[dbo].[UserRegister]", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@username", user.Username);
+            cmd.Parameters.AddWithValue("@name",user.Name);
+            cmd.Parameters.AddWithValue("@password", user.Password);
+            cmd.Parameters.AddWithValue("@mobilenumber", user.Mobilenumber);
             con.Open();
             int result = (int)cmd.ExecuteScalar();
-            if (result == 1)
+            if (result == 0)
             {
                 Console.WriteLine("User Already Exists..!");
-                return false;
             }
-            else return true;
+            else Console.WriteLine("User created successfully..");
         }
     }
 }

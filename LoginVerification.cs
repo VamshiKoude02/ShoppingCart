@@ -9,35 +9,30 @@ namespace ShoppingCart
 {
     class LoginVerification
     {
-        private SqlConnection _connection;
-        private Users users;
-
-        public LoginVerification(SqlConnection connection)
+        private SqlConnection conn;
+        public LoginVerification(SqlConnection conn)
         {
-            _connection = connection;
-            users = new Users(_connection);
+            this.conn = conn;
         }
 
-        public bool UserVerification()
+        public void UserVerification()
         {
+            Users user = new Users(conn);
             Console.WriteLine("Welcome to shopping.com");
             Console.WriteLine("Do you have the credentials?(Yes/No)");
             string userInput = Console.ReadLine().ToLower();
-            if(userInput == "yes")
+            if (userInput == "yes")
             {
-                return Users.UserLogin();
+                user.UserLogin();
             }
-            else if(userInput == "no")
+            else if (userInput == "no")
             {
-                return Users.UserRegister();
+                user.UserRegister();
             }
             else
             {
                 Console.WriteLine("Enter valid Input(Yes/No)....!");
-                return false;
             }
-
         }
-
     }
 }
