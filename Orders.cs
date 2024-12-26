@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingCart
 {
-    internal class Orders
+    class Orders
     {
     }
 }

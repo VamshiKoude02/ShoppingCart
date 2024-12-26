@@ -1,103 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ShoppingCart
 {
+    class Userdetails
+    {
+        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string ConfrimPassword { get; set; }
+        public string Mobilenumber { get; set; }
+    }
+
     class Users
     {
-        private string _name;
-        private string _username;
-        private string _password;
-        private string _mobilenumber;
-        private SqlConnection _connection;
-
-        public Users(SqlConnection connection)
+        private SqlConnection con;
+        public Users(SqlConnection conn)
         {
-            _connection = connection;
-
-        }
-        public string Name {
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _name = value;
-                }
-                else
-                {
-                    Console.WriteLine("Name Can't be Blank");
-                }
-            }
-            get
-            {
-                return _name;
-            }
-        }
-        public string Username {
-            set 
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _username = value;
-                }
-                else
-                {
-                    Console.WriteLine("Username Can't be Blank");
-                }
-            }
-            get
-            {
-                return _username;
-            }
-        }
-        public string Password {
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    _password = value;
-                }
-                else
-                {
-                    Console.WriteLine("Password Can't be Blank");
-                }
-            }
-            get
-            {
-                return _password;
-            }
-
-        }
-        public string MobileNumber {
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _mobilenumber = value;
-                }
-                else
-                {
-                    Console.WriteLine("Mobile Number Can't be Blank");
-                }
-            }
-            get
-            {
-                return _mobilenumber;
-            }
+            con = conn;
         }
 
-        public bool UserLogin(string username, string password)
+        Userdetails user = new Userdetails();
+
+        public bool UserLogin()
         {
-            return true;
+            Console.WriteLine("Enter Username:");
+            user.Username = Console.ReadLine();
+            Console.WriteLine("Enter Password");
+            user.Password = Console.ReadLine();
+            SqlCommand cmd = new SqlCommand("[dbo.UserLogin]",con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@username", user.Username);
+            cmd.Parameters.AddWithValue("@password",user.Password);
+            con.Open();
+            int result = (int)cmd.ExecuteScalar();
+            if (result == 1)
+            {
+                return true;
+            }
+            else return false;
         }
 
         public bool UserRegister()
         {
-            return false;
+            Userregistration:
+            Console.WriteLine("Enter Name:");
+            user.Name = Console.ReadLine();
+            Console.WriteLine("Enter Username:");
+            user.Username = Console.ReadLine();
+            Console.WriteLine("Enter Password");
+            user.Password = Console.ReadLine();
+            Console.WriteLine("Enter Confrim Password");
+            user.ConfrimPassword = Console.ReadLine();
+            if(user.ConfrimPassword != user.Password)
+            {
+                goto Userregistration;
+            }
+            Console.WriteLine("Enter Mobile Number");
+            user.Mobilenumber = Console.ReadLine();
+            SqlCommand cmd = new SqlCommand("[dbo.UserRegister]", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@username", user.Username);
+            con.Open();
+            int result = (int)cmd.ExecuteScalar();
+            if (result == 1)
+            {
+                Console.WriteLine("User Already Exists..!");
+                return false;
+            }
+            else return true;
         }
     }
 }

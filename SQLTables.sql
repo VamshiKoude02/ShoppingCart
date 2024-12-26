@@ -1,3 +1,6 @@
+
+create database shoppingCart
+
 use shoppingCart
 
 CREATE TABLE UserRegistration (
