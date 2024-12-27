@@ -38,7 +38,7 @@ Cart Management
 		Methods:
 			bool AddToCart(int productId, int quantity)
 			decimal GetTotalCost()
-4.	CartItem
+4.	CartItems
 		Properties:
 			int ProductID
 			string ProductName

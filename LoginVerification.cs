@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace ShoppingCart
 {
+    
     class LoginVerification
     {
+        public bool loginverification = false;
+
         private SqlConnection conn;
         public LoginVerification(SqlConnection conn)
         {
@@ -17,21 +20,28 @@ namespace ShoppingCart
 
         public void UserVerification()
         {
-            Users user = new Users(conn);
-            Console.WriteLine("Welcome to shopping.com");
             Console.WriteLine("Do you have the credentials?(Yes/No)");
-            string userInput = Console.ReadLine().ToLower();
-            if (userInput == "yes")
+            
+            while (!loginverification)
             {
-                user.UserLogin();
-            }
-            else if (userInput == "no")
-            {
-                user.UserRegister();
-            }
-            else
-            {
-                Console.WriteLine("Enter valid Input(Yes/No)....!");
+                Users user = new Users(conn);
+                string userInput = Console.ReadLine().ToLower();
+                if (userInput == "yes")
+                {
+                    
+                        user.UserLogin();
+                        loginverification = user.loginverification;
+                    
+                }
+                else if (userInput == "no")
+                {
+                    user.UserRegister();
+                    loginverification = user.loginverification;
+                }
+                else
+                {
+                    Console.WriteLine("Enter valid Input(Yes/No)....!");
+                }
             }
         }
     }

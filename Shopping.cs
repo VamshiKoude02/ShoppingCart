@@ -14,9 +14,9 @@ namespace ShoppingCart
         {
             string constr = ConfigurationManager.ConnectionStrings["shoppingCart"].ConnectionString;
             SqlConnection conn = new SqlConnection(constr);
-            Users users = new Users(conn);
             LoginVerification login = new LoginVerification(conn);
             login.UserVerification();
+            Console.Read();
         }
     }
 }

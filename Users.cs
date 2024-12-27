@@ -6,9 +6,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ShoppingCart
 {
+    static class Username
+    {
+        public static string username;
+    }
     class Userdetails
     {
         public string Name { get; set; }
@@ -18,37 +23,58 @@ namespace ShoppingCart
         public string Mobilenumber { get; set; }
     }
 
-     class Users
+    class Users
     {
         private SqlConnection con;
         public Users(SqlConnection conn)
         {
             con = conn;
         }
-
         Userdetails user = new Userdetails();
 
+        public bool loginverification = false;
         public void UserLogin()
         {
-            Console.WriteLine("Enter Username:");
-            user.Username = Console.ReadLine();
-            Console.WriteLine("Enter Password");
-            user.Password = Console.ReadLine();
-            SqlCommand cmd = new SqlCommand("[dbo].[UserLogin]",con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@username", user.Username);
-            cmd.Parameters.AddWithValue("@password",user.Password);
-            con.Open();
-            int result = (int)cmd.ExecuteScalar();
-            if (result == 1)
+                
+            while (!loginverification)
             {
-                Console.WriteLine("User login success..");
+                Console.WriteLine("Enter Username:");
+                user.Username = Console.ReadLine();
+                Console.WriteLine("Enter Password");
+                user.Password = Console.ReadLine();
+                SqlCommand cmd = new SqlCommand("[dbo].[UserLogin]", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@username", user.Username);
+                cmd.Parameters.AddWithValue("@password", user.Password);
+                try
+                {
+                    ShoppingProcess shopppingprocess = new ShoppingProcess(con);
+                    con.Open();
+                    int result = (int)cmd.ExecuteScalar();
+                    con.Close();
+                    if (result == 1)
+                    {
+                        Console.WriteLine("User login success..");
+                        loginverification = true;
+                        Username.username = user.Username;
+                        shopppingprocess.ShoppingOptions();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Credentials.Please try again..!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                }
             }
-            else Console.WriteLine("Invalid Credentials..!");
+            
         }
 
         public void UserRegister()
-        {
+        {    
             Console.WriteLine("Enter Name:");
             user.Name = Console.ReadLine();
             Console.WriteLine("Enter Username:");
@@ -60,7 +86,7 @@ namespace ShoppingCart
             user.ConfrimPassword = Console.ReadLine();
             if(user.ConfrimPassword != user.Password)
             {
-                Console.WriteLine("Password didn't match..!");
+                Console.WriteLine("Password didn't match.Try again..!");
                 goto ValidPassword;
             }
             CorrectNumber:
@@ -77,13 +103,41 @@ namespace ShoppingCart
             cmd.Parameters.AddWithValue("@name",user.Name);
             cmd.Parameters.AddWithValue("@password", user.Password);
             cmd.Parameters.AddWithValue("@mobilenumber", user.Mobilenumber);
-            con.Open();
-            int result = (int)cmd.ExecuteScalar();
-            if (result == 0)
+            try
             {
-                Console.WriteLine("User Already Exists..!");
+                ShoppingProcess shopppingprocess = new ShoppingProcess(con);
+                con.Open();
+                int result = (int)cmd.ExecuteScalar();
+                con.Close();
+                if (result == 0)
+                {
+                    Console.WriteLine("User Already Exists..!");
+                    Console.WriteLine("Do you want to Login.?");
+                    string input = Console.ReadLine().ToLower();
+                    if (input == "yes")
+                    {
+                        UserLogin();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unable to Login");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User created successfully..");
+                    string finalusername = user.Username;
+                    loginverification = true;
+                    Username.username = user.Username;
+                    shopppingprocess.ShoppingOptions();
+
+                }
             }
-            else Console.WriteLine("User created successfully..");
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
         }
     }
 }
