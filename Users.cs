@@ -112,7 +112,7 @@ namespace ShoppingCart
                 if (result == 0)
                 {
                     Console.WriteLine("User Already Exists..!");
-                    Console.WriteLine("Do you want to Login.?");
+                    Console.WriteLine("Do you want to Login.?(yes/no)");
                     string input = Console.ReadLine().ToLower();
                     if (input == "yes")
                     {

@@ -63,6 +63,7 @@ namespace ShoppingCart
                 else if (input == 4)
                 {
                     cart.CartFinalList();
+                    iscartok:
                     Console.WriteLine("Are you okay with cart Items..?");
                     string cartok = Console.ReadLine();
                     if (cartok == "yes") {
@@ -100,6 +101,7 @@ namespace ShoppingCart
                             else
                             {
                                 Console.WriteLine("Cart is Empty..!");
+                                goto iscartok;
                             }
                         }
                         else
@@ -107,12 +109,45 @@ namespace ShoppingCart
                             goto Addtocart;
                         }
                     }
+                    else if(cartok == "no")
+                    {
+                        CartItems cartItems = new CartItems();
+                        Cart cartlist = new Cart(con);
+                        Console.WriteLine("Do you want to remove any items?");
+                        string removeitems = Console.ReadLine().ToLower();
+                        if(removeitems == "yes")
+                        {
+                            cartlist.CartList();
+                            Console.WriteLine("Which item Do you want to remove? Please Enter CartID of it.");
+                            int cartno = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter Quantity");
+                            int Quantity = Convert.ToInt32(Console.ReadLine());
+                            SqlCommand cmd = new SqlCommand("[dbo].[IsCartNotOK]",con);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            con.Open();
+                            cmd.Parameters.AddWithValue("@cartID", cartno);
+                            cmd.Parameters.AddWithValue("@Quantity",Quantity);
+                            string output = (string)cmd.ExecuteScalar();
+                            con.Close();
+                            Console.WriteLine(output);
+                            goto iscartok;
+                        }
+                        else
+                        {
+                            goto Addtocart;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Enter Correct Input..");
+                        goto iscartok;
+                    }
 
                 }
                 else if(input == 5)
                 {
                     Console.WriteLine("User name :" + Username.username);
-                    SqlCommand cmd = new SqlCommand("mobilenumber", con)
+                    SqlCommand cmd = new SqlCommand("[dbo].[mobilenumber]", con)
                     {
                         CommandType = CommandType.StoredProcedure
                     };

@@ -20,7 +20,7 @@ namespace ShoppingCart
 
         public void UserVerification()
         {
-            Console.WriteLine("Do you have the credentials?(Yes/No)");
+            Console.WriteLine("Do you have the credentials?(yes/no)");
             
             while (!loginverification)
             {
@@ -40,7 +40,7 @@ namespace ShoppingCart
                 }
                 else
                 {
-                    Console.WriteLine("Enter valid Input(Yes/No)....!");
+                    Console.WriteLine("Enter valid Input(yes/no)....!");
                 }
             }
         }

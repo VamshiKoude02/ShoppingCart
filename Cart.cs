@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -56,6 +57,7 @@ namespace ShoppingCart
         {
             List<CartItems> cartlist = new List<CartItems>();
             SqlCommand cmd = new SqlCommand("[dbo].[CartFinalList]", con);
+            cmd.CommandType = CommandType.StoredProcedure;
             con.Open();
             SqlDataReader dr = cmd.ExecuteReader();
             if (dr.HasRows)
