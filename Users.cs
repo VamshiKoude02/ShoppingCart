@@ -46,6 +46,7 @@ namespace ShoppingCart
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@username", user.Username);
                 cmd.Parameters.AddWithValue("@password", user.Password);
+
                 try
                 {
                     ShoppingProcess shopppingprocess = new ShoppingProcess(con);
